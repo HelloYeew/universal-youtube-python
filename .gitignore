@@ -123,3 +123,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.DS_Store
+.idea
+try.py
+*.mp4
+*.mp3
+*.jpg
