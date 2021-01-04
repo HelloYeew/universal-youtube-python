@@ -130,3 +130,4 @@ try.py
 *.mp4
 *.mp3
 *.jpg
+client_oauth2.json

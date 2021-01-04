@@ -1,10 +1,21 @@
 import sys
-from check_library import *
+from check import *
 from for_dev import *
 
-# check requirement
 print("Booting program...")
 print()
+
+# check internet connection
+print("Checking internet connection with YouTube...")
+connection = check_internet()
+if connection == True:
+    print("Connection complete!")
+else:
+    print("Connection failed! Please check your internet connection or YouTube status.")
+    sys.exit()
+print()
+
+# check requirement
 check_library()
 print()
 print("Checking directory...")
@@ -18,33 +29,51 @@ from function import *
 while True:
     print("--Main menu--")
     print("What you want to do?")
-    print("1.Fetch Clip Data")
-    print("2.Download Thumbnail")
+    print("1.Fetch Video Data")
+    print("2.Download Video Thumbnail")
+    print("3.Download Video as mp4")
     print("0.exit")
-    menu = int(input("Press number from menu to continue : "))
-    print()
-    if menu == 1:
-        url = input("Please enter YouTube URL here: ")
-        print()
-        try:
-            fetch_data(url)
-        except:
-            print("Error : This is not URL, This URL is not from YouTube or this video is private or not available.")
+    menu = input("Press number from menu to continue : ")
+    if menu.isnumeric():
+        menu = int(menu)
+        if menu == 1:
+            url = input("Please enter YouTube URL here: ")
             print()
-    elif menu == 2:
-        url = input("Please enter YouTube URL here: ")
-        print()
-        try:
-            download_thumbnail(url)
-        except:
-            print("Error : This is not URL, This URL is not from YouTube or this video is private or not available.")
+            try:
+                fetch_data(url)
+            except Exception as ex:
+                print(f"Error : {ex}")
+                print(f"Please check your YouTube URL again!")
+                print()
+        elif menu == 2:
+            url = input("Please enter YouTube URL here: ")
             print()
-    elif menu == 0:
-        print("Bye!")
-        sys.exit()
+            try:
+                download_thumbnail(url)
+            except Exception as ex:
+                print(f"Error : {ex}")
+                print(f"Please check your YouTube URL again!")
+                print()
+        elif menu == 3:
+            url = input("Please enter YouTube URL here: ")
+            print()
+            try:
+                download_mp4(url)
+            except Exception as ex:
+                print(f"Error : {ex}")
+                print(f"Please check your YouTube URL again!")
+                print()
+        elif menu == 0:
+            print("Bye!")
+            sys.exit()
+        else:
+            print("Incorrect input")
+            print()
     else:
         print("Incorrect input")
-        print("")
+        print()
+
+
 
 
 

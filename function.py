@@ -1,4 +1,7 @@
+import pytube
 from pytube import YouTube
+from tqdm import tqdm
+import time
 import urllib.request
 import os
 import wget
@@ -7,39 +10,63 @@ def fetch_data(url):
     print("Fetching data...")
     clip = YouTube(url)
     clip.prefetch()
+    for i in tqdm(range(100),
+                  desc="Printing",
+                  ascii=False, ncols=100):
+        time.sleep(0.01)
     print(f"Title : {clip.title}")
-    print(f"Length : {clip.length} seconds")
+    clip_min = float(clip.length / 60)
+    print(f"Length : {clip.length} seconds ({clip_min} minutes)")
     print(f"Views : {clip.views}")
     print(f"Author : {clip.author}")
     print(f"Rating : {clip.rating}")
     print(f"Thumbnail URL : {clip.thumbnail_url}")
+    print(f"Video ID : {pytube.extract.video_id(url)}")
     if len(clip.caption_tracks) == 0:
         print("Available Captions : No caption available")
     else:
         print(f"Available Captions : {len(clip.caption_tracks)} languages include")
         for i in range(len(clip.caption_tracks)):
             print(f"{i+1}.{clip.caption_tracks[i]}")
-    print(f"Description :")
+    print(f"Streams Availability : {len(clip.streams)} streams include")
+    for i in range(len(clip.streams)):
+        print(f"{i + 1}.{clip.streams[i]}")
+    print(f"Video Description :")
     print(clip.description)
     print()
     print("Complete!")
     print()
-    command = input("Do you want to download thumbnail?(y/n) : ")
-    if command == "y":
-        print("Start downloading thumbnail...")
-        urllib.request.urlretrieve(clip.thumbnail_url, f"{os.getcwd()}/thumbnail.jpg")
-        print("Download complete!")
-        print(f"File directory : {os.getcwd()}/thumbnail.jpg")
-        print()
-    else:
-        print()
 
 
 def download_thumbnail(url):
     print("Fetching data...")
     clip = YouTube(url)
-    print("Start downloading thumbnail...")
+    for i in tqdm(range(100),
+                  desc="Start downloading thumbnail...",
+                  ascii=False, ncols=100):
+        time.sleep(0.0001)
     urllib.request.urlretrieve(clip.thumbnail_url, f"{os.getcwd()}/thumbnail.jpg")
     print("Download complete!")
     print(f"File directory : {os.getcwd()}/thumbnail.jpg")
     print()
+
+def download_mp4(url):
+    print("Fetching data...")
+    yt_url = url
+    yt_obj = YouTube(yt_url)
+    # fetch resolution
+    print("Available Streams")
+    for stream in yt_obj.streams:
+        print(stream)
+    print()
+    # filter data
+    print("Filter data")
+    filters = yt_obj.streams.filter(progressive=True, file_extension='mp4')
+    for mp4_filter in filters:
+        print(mp4_filter)
+    # Download video
+    filters.get_highest_resolution().download()
+    print("Download complete!")
+    print(f"File directory : {os.getcwd()}/{yt_obj.title}.mp4")
+    print()
+
