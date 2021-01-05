@@ -1,19 +1,19 @@
 import pytube
 from pytube import YouTube
 from tqdm import tqdm
+from pathlib import Path
 import time
 import urllib.request
 import os
 import wget
 
 def fetch_data(url):
-    print("Fetching data...")
+    print("Start fetching data...")
     clip = YouTube(url)
-    clip.prefetch()
-    for i in tqdm(range(100),
-                  desc="Printing",
-                  ascii=False, ncols=100):
-        time.sleep(0.01)
+    for i in tqdm(range(1), desc="Fetching data...", ascii=False, ncols=100):
+        clip.prefetch()
+    for j in tqdm(range(10), desc="Printing...", ascii=True, ncols=100):
+        time.sleep(0.15)
     print(f"Title : {clip.title}")
     clip_min = float(clip.length / 60)
     print(f"Length : {clip.length} seconds ({clip_min} minutes)")
@@ -48,6 +48,7 @@ def download_thumbnail(url):
     urllib.request.urlretrieve(clip.thumbnail_url, f"{os.getcwd()}/thumbnail.jpg")
     print("Download complete!")
     print(f"File directory : {os.getcwd()}/thumbnail.jpg")
+    os.system(f"open {os.getcwd()}/thumbnail.jpg")
     print()
 
 def download_mp4(url):
@@ -64,9 +65,13 @@ def download_mp4(url):
     filters = yt_obj.streams.filter(progressive=True, file_extension='mp4')
     for mp4_filter in filters:
         print(mp4_filter)
+    print()
     # Download video
-    filters.get_highest_resolution().download()
+    for i in tqdm(range(1), desc="Downloading video...", ascii=False, ncols=100):
+        filters.get_highest_resolution().download()
     print("Download complete!")
     print(f"File directory : {os.getcwd()}/{yt_obj.title}.mp4")
+    print(f"File Size : {Path(f'{os.getcwd()}/{yt_obj.title}.mp4').stat().st_size} bytes")
+    os.system(f"open '{os.getcwd()}/{yt_obj.title}.mp4'")
     print()
 

@@ -1,6 +1,7 @@
 import sys
 from check import *
 from for_dev import *
+import getpass
 
 print("Booting program...")
 print()
@@ -25,10 +26,13 @@ print()
 # menu function
 from function import *
 
+# turn on and turn off dev mode here
+dev = True
+
 # Main Menu
 while True:
     print("--Main menu--")
-    print("What you want to do?")
+    print(f"Hi! {getpass.getuser()}. What you want to do?")
     print("1.Fetch Video Data")
     print("2.Download Video Thumbnail")
     print("3.Download Video as mp4")
@@ -72,11 +76,3 @@ while True:
     else:
         print("Incorrect input")
         print()
-
-
-
-
-
-
-
-
